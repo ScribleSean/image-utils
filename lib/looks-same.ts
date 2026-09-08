@@ -557,7 +557,7 @@ const compare = async (
   return {
     equal:
       differentPixels === 0 ||
-      (differentPixels / totalPixels) * 100 <= options.percentThreshold,
+      differentPixels * 100 <= options.percentThreshold * totalPixels,
     differentPixels,
     totalPixels,
   }

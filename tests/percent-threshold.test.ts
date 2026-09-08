@@ -12,6 +12,25 @@ const png = (width: number, changedPixels = 0) => {
 }
 
 for (const strict of [false, true]) {
+  test(`percentThreshold preserves rounding-sensitive boundaries (strict=${strict})`, async () => {
+    for (const [changedPixels, percentThreshold, equal] of [
+      [7, 6.999, false],
+      [7, 7, true],
+      [7, 7.001, true],
+      [8, 7, false],
+      [29, 29, true],
+    ] as const) {
+      expect(
+        await looksSame(png(100), png(100, changedPixels), {
+          strict,
+          percentThreshold,
+          ignoreCaret: false,
+          ignoreAntialiasing: false,
+        }),
+      ).toEqual({ equal, differentPixels: changedPixels, totalPixels: 100 })
+    }
+  })
+
   test(`percentThreshold uses inclusive percentages (strict=${strict})`, async () => {
     const reference = png(10)
     const current = png(10, 1)
